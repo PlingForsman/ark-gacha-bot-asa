@@ -3,13 +3,9 @@ import mss
 from ctypes import wintypes
 import ctypes
 import time 
-
-def find_window_by_title(title):
-    return ctypes.windll.user32.FindWindowW(None, title)
-
-
+import source.join_sim.source.utility.w_handle as w_handle
 def find_screen_size():
-    hwnd = find_window_by_title("ArkAscended") 
+    hwnd = w_handle.HWND
     rect = wintypes.RECT()
     if ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(rect)):
         height = rect.bottom - rect.top

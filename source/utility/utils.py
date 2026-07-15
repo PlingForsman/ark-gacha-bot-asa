@@ -1,6 +1,6 @@
 import ctypes
 import time
-from . import local_player ,windows
+from . import local_player ,windows ,w_handle
 from source.logs import gachalogs as logs
 from source.ASA.player import console , player_state
 """
@@ -23,7 +23,7 @@ default_keymap = {
     "useitem5": "five","useitem6": "six","useitem7": "seven","useitem8": "eight","useitem9": "nine","useitem10": "zero"
 }
 
-hwnd = windows.hwnd
+hwnd = w_handle.HWND
 ctypes.windll.user32.VkKeyScanA.argtypes = [ctypes.c_char]
 ctypes.windll.user32.VkKeyScanA.restype = ctypes.c_short  
 
@@ -61,14 +61,14 @@ def write(text):
         post_charecter(c)
         
 def ctrl_a(): # hotkey for sending ctrl a 
-    ctypes.windll.user32.SendMessageW(windows.hwnd, WM_KEYDOWN, 0x11, 0)
+    ctypes.windll.user32.SendMessageW(hwnd, WM_KEYDOWN, 0x11, 0)
     time.sleep(0.1)
-    ctypes.windll.user32.SendMessageW(windows.hwnd, WM_KEYDOWN, 0x41, 0)
+    ctypes.windll.user32.SendMessageW(hwnd, WM_KEYDOWN, 0x41, 0)
     time.sleep(0.1)  
     
-    ctypes.windll.user32.SendMessageW(windows.hwnd, WM_KEYUP, 0x41, 0)
+    ctypes.windll.user32.SendMessageW(hwnd, WM_KEYUP, 0x41, 0)
     time.sleep(0.1)
-    ctypes.windll.user32.SendMessageW(windows.hwnd, WM_KEYUP, 0x11, 0)
+    ctypes.windll.user32.SendMessageW(hwnd, WM_KEYUP, 0x11, 0)
 """
 FUNCTIONS FOR MOUSE MOVEMENT
 """

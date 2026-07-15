@@ -1,5 +1,5 @@
 from source.ASA.inventories import inventory
-from source.utility import utils ,template , windows ,variables ,screen ,local_player
+from source.utility import utils ,template , windows ,variables ,screen ,local_player ,w_handle
 from source.logs import gachalogs as logs
 import time 
 import settings
@@ -53,7 +53,7 @@ def check_disconnected():
     
     if main.is_menu() or main.is_crashed():
         logs.logger.critical("we are disconnected from the server")
-        windows.hwnd = main.main_loop(str(settings.server_number))
+        w_handle.HWND = main.main_loop(str(settings.server_number))
         tribelog.close()
         logs.logger.critical("joined back into the server waiting 30 seconds to render everything ")
         time.sleep(60)# letting everything load back in

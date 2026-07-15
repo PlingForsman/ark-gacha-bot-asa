@@ -1,12 +1,13 @@
 import ctypes
 import source.join_sim.source.utility.screen as screen
+import source.join_sim.source.utility.w_handle as w_handle
 import time
 from ctypes import wintypes
 
 def find_window_by_title(title):
     return ctypes.windll.user32.FindWindowW(None, title)
 
-hwnd = find_window_by_title("ArkAscended") 
+hwnd = w_handle.HWND
 
 INPUT_MOUSE = 0
 MOUSEEVENTF_MOVE = 0x0001

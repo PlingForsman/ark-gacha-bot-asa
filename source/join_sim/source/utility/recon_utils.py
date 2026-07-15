@@ -8,7 +8,7 @@ location = {
     "escape":{"start_x":2330, "start_y":110 ,"width":60 ,"height":50},
     "escape_obscured":{"start_x":2330, "start_y":110 ,"width":60 ,"height":50},
     "join_last_session":{"start_x":1135, "start_y":1250 ,"width":300 ,"height":50},
-    "join_game":{"start_x":400, "start_y":1000 ,"width":700 ,"height":60},
+    "join_game":{"start_x":400, "start_y":800 ,"width":1000 ,"height":500},
     "join_button":{"start_x":2230, "start_y":1230 ,"width":100 ,"height":50},
     "multiplayer":{"start_x":100, "start_y":110 ,"width":85 ,"height":60},
     "server_full":{"start_x":1330, "start_y":460 ,"width":250 ,"height":60},
@@ -168,5 +168,6 @@ def template_find(item:str,) -> tuple:
 
     start_point =(int(region["start_x"] * multiplier) + max_loc[0], int(region["start_y"] * multiplier) + max_loc[1])
     mid_point = (start_point[0] + width // 2 , start_point[1] + height // 2)
-
+    print(max_val)
+    print(mid_point)
     return mid_point

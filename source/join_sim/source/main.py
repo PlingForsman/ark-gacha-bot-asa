@@ -3,9 +3,9 @@ import time
 from  source.join_sim.source.menus import mod_menu , multiplayer_menu, join_game_menu, success,start_menu, failure
 from source.join_sim.source.logs import logger as logs
 import source.join_sim.source.crash.crash as crash
+import settings
 
-
-server = 0000
+server = settings.server_number
 
 def is_menu():
     return recon_utils.check_template_no_bounds("escape",0.7) or recon_utils.check_template_no_bounds("escape_obscured",0.7)

@@ -6,7 +6,7 @@ import settings
 import time
 from source.ASA.player import console
 import json
-
+import random
 
 
 roi_regions = {
@@ -40,7 +40,8 @@ roi_regions = {
     "access_inv":{"start_x":550, "start_y":450 ,"width":1670 ,"height":880},
     "turn_off":{"start_x":1200, "start_y":1160,"width":200 ,"height":40},
     "vault_full":{"start_x":1420, "start_y":700,"width":150 ,"height":40},
-    "search": {"start_x":450, "start_y":1270 ,"width":120 ,"height":40}
+    "search": {"start_x":450, "start_y":1270 ,"width":120 ,"height":40},
+    "item_locations": {"start_x":0, "start_y":0 ,"width":150 ,"height":1440}
 }
 def template_await_true(func,sleep_amount:float,*args) -> bool:
     count = 0 
@@ -321,6 +322,93 @@ def check_both_strips():
     roi1 = console_strip_bottom()
     roi2 = console_strip_middle()
     return console_strip_check(roi1) or console_strip_check(roi2)
+
+def check_if_same_colour(roi):
+    '''checks the part of the console strip at a few locations to see if they are the same colour if they are assume that it is open'''
+    gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    height, width = gray_roi.shape # height always = 2 pixels
+
+    pixels = []
+    for _ in range(50):
+        x = random.randint(0, width - 1)
+        y = random.randint(0, height - 1)
+        pixels.append(gray_roi[y, x])
+    if all(pixel == pixels[0] for pixel in pixels):
+        logs.logger.error(f"console strip is likley -> {pixels[0]} please change the console bounds +-5 ")
+
+    return all(pixel == pixels[0] for pixel in pixels)
+
+def item_counter(item,threshold):
+    region = roi_regions["item_locations"]
+    if screen.screen_resolution == 1440:
+        roi = screen.get_screen_roi(region["start_x"], region["start_y"], region["width"], region["height"])
+    else:
+        roi = screen.get_screen_roi(int(region["start_x"] * 0.75), int(region["start_y"] * 0.75), int(region["width"] * 0.75), int(region["height"] * 0.75))
+    
+    lower_boundary = np.array([0,0,0])
+    upper_boundary = np.array([255,255,255])
+
+    hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
+    masked_template = cv2.bitwise_and(roi, roi, mask= mask)
+    gray_roi = cv2.cvtColor(masked_template, cv2.COLOR_BGR2GRAY)
+
+    image = cv2.imread(f"assets/icons{screen.screen_resolution}/{item}.png")
+    hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
+    masked_template = cv2.bitwise_and(image, image, mask=mask)
+    image = cv2.cvtColor(masked_template,cv2.COLOR_BGR2GRAY)
+
+    res = cv2.matchTemplate(gray_roi, image, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    
+    if max_val > threshold:
+        logs.logger.template(f"{item} count found:{max_val}")
+        return True , max_loc
+    logs.logger.template(f"{item} count not found:{max_val} threshold:{threshold}")
+    return False , (0,0)
+
+def item_save():
+    region = roi_regions["item_locations"]
+    if screen.screen_resolution == 1440:
+        roi = screen.get_screen_roi(region["start_x"], region["start_y"], region["width"], region["height"])
+    else:
+        roi = screen.get_screen_roi(int(region["start_x"] * 0.75), int(region["start_y"] * 0.75), int(region["width"] * 0.75), int(region["height"] * 0.75))
+
+    lower_boundary = np.array([0,0,0])
+    upper_boundary = np.array([255,255,255])
+
+    hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
+    masked_template = cv2.bitwise_and(roi, roi, mask= mask)
+    gray_roi = cv2.cvtColor(masked_template, cv2.COLOR_BGR2GRAY)
+
+    return gray_roi 
+
+def item_load(gray_roi, item, threshold):
+
+    lower_boundary = np.array([0,0,0])
+    upper_boundary = np.array([255,255,255])
+
+    image = cv2.imread(f"assets/icons{screen.screen_resolution}/{item}.png")
+    hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
+    masked_template = cv2.bitwise_and(image, image, mask=mask)
+    image = cv2.cvtColor(masked_template,cv2.COLOR_BGR2GRAY)
+
+    res = cv2.matchTemplate(gray_roi, image, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+    if max_val > threshold:
+        logs.logger.template(f"{item} count found:{max_val}")
+        return True , max_loc
+    logs.logger.template(f"{item} count not found:{max_val} threshold:{threshold}")
+    return False , (0,0)
+
+
+
+
+
 
 if __name__ == "__main__":
     time.sleep(2)
