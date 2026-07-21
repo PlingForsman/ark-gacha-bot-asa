@@ -29,6 +29,8 @@ crafting: bool = data["crafting"]
 seeds_230: bool = data["seeds_230"]
 side_crop_plot: bool = data["side_crop_plot"]
 y_trap_bot: bool = data["y_trap_bot"]
+cargo_ledger: bool = data["cargo_ledger"]
+cargo_pickup: str = data["cargo_pickup"] 
 
 #YOUR discord channel IDs and bot API key. To find channel IDs enable developer mode in discord and right click the channel to copy ID.
 log_channel_gacha = data["log_channel_gacha"]

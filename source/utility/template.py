@@ -41,7 +41,8 @@ roi_regions = {
     "turn_off":{"start_x":1200, "start_y":1160,"width":200 ,"height":40},
     "vault_full":{"start_x":1420, "start_y":700,"width":150 ,"height":40},
     "search": {"start_x":450, "start_y":1270 ,"width":120 ,"height":40},
-    "item_locations": {"start_x":0, "start_y":0 ,"width":150 ,"height":1440}
+    "item_locations": {"start_x":0, "start_y":0 ,"width":150 ,"height":1440},
+    "cargo_ledger":{"start_x":1100, "start_y":245 ,"width":355 ,"height":70},
 }
 def template_await_true(func,sleep_amount:float,*args) -> bool:
     count = 0 
