@@ -88,4 +88,17 @@ def popcorn_top_row():
             time.sleep(0.1*settings.lag_offset)
             utils.press_key("DropItem")
 
+def hover_inv_slot(column:int,row:int):
+    '''starting at 0,0 should not exceed 5'''
+    if is_open():
+        time.sleep(0.2*settings.lag_offset)
+        x = inv_slots["x"] + (column *inv_slots["distance"]) + 30  # 30 is an ofset actual location is top left
+        y = inv_slots["y"] + (row *inv_slots["distance"]) + 30
+        if screen.screen_resolution == 1080:
+            windows.move_mouse(x * 0.75,y * 0.75)
+        else:
+            windows.move_mouse(x,y)
+        time.sleep(0.1*settings.lag_offset)
+        
+
  

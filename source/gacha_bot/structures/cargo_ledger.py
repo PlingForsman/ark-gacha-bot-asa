@@ -1,4 +1,6 @@
-import time 
+import time
+
+from numpy.linalg import inv 
 import settings
 import json
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
@@ -13,10 +15,17 @@ def is_open():
 
 def get_y_from_cargo():
     utils.turn_down(20)
+    time.sleep(0.2*settings.lag_offset)
     inventory.open()
     if is_open():
         inventory.search_in_object("Trap")
+        inventory.hover_inv_slot(0,0)
+        time.sleep(0.2*settings.lag_offset)
+        windows.click()
+        windows.click()
+        time.sleep(0.2*settings.lag_offset)
         inventory.transfer_all_from() 
     inventory.close()
+    time.sleep(0.2*settings.lag_offset)
     utils.turn_up(20)
     ...
