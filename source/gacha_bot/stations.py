@@ -4,10 +4,11 @@ from source.utility import utils ,template , windows ,variables ,screen ,local_p
 from source.logs import gachalogs as logs
 from source.ASA.strucutres import teleporter , inventory ,bed
 from source.ASA.stations import custom_stations
-from source.ASA.player import player_inventory , player_state ,console , tribelog
+from source.ASA.player import player_inventory , player_state ,console , trib
 import source.gacha_bot.config 
 import source.gacha_bot.render
 from source.gacha_bot import config , deposit , gacha , iguanadon , pego , render
+from source.gacha_bot.structures import cargo_ledger
 from abc import ABC ,abstractmethod
 
 global berry_station
@@ -66,6 +67,7 @@ class gacha_station(base_task):
             if (berry_station or time_between > source.gacha_bot.config.time_to_reberry*60*60):
                 teleporter.teleport_not_default(cargo_metadata)
                 #cargo pickup
+                cargo_ledger.get_y_from_cargo()
                 last_berry = time.time()
                 berry_station = False
             #go to gacha and deposit into gacha
