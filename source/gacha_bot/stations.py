@@ -4,7 +4,7 @@ from source.utility import utils ,template , windows ,variables ,screen ,local_p
 from source.logs import gachalogs as logs
 from source.ASA.strucutres import teleporter , inventory ,bed
 from source.ASA.stations import custom_stations
-from source.ASA.player import player_inventory , player_state ,console , trib
+from source.ASA.player import player_inventory , player_state ,console , tribelog
 import source.gacha_bot.config 
 import source.gacha_bot.render
 from source.gacha_bot import config , deposit , gacha , iguanadon , pego , render

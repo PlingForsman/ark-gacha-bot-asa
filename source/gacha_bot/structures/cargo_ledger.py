@@ -1,6 +1,4 @@
 import time
-
-from numpy.linalg import inv 
 import settings
 import json
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
@@ -28,4 +26,5 @@ def get_y_from_cargo():
     inventory.close()
     time.sleep(0.2*settings.lag_offset)
     utils.turn_up(20)
+    time.sleep(0.2*settings.lag_offset)
     ...
