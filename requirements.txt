@@ -6,3 +6,6 @@ discord.py==2.3.2
 pywin32 
 psutil
 pytesseract
+customtkinter>=5.2.0
+tkinter>=8.6.12
+Pillow>=9.1.0

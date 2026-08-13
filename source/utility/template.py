@@ -339,7 +339,7 @@ def check_if_same_colour(roi):
 
     return all(pixel == pixels[0] for pixel in pixels)
 
-def item_counter(item,threshold):
+def check_items():
     region = roi_regions["item_locations"]
     if screen.screen_resolution == 1440:
         roi = screen.get_screen_roi(region["start_x"], region["start_y"], region["width"], region["height"])
@@ -354,6 +354,12 @@ def item_counter(item,threshold):
     masked_template = cv2.bitwise_and(roi, roi, mask= mask)
     gray_roi = cv2.cvtColor(masked_template, cv2.COLOR_BGR2GRAY)
 
+    return gray_roi
+
+def item_counter(roi,item,threshold):
+    gray_roi = roi  
+    lower_boundary = np.array([0,0,0])
+    upper_boundary = np.array([255,255,255])
     image = cv2.imread(f"assets/icons{screen.screen_resolution}/{item}.png")
     hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
@@ -362,12 +368,16 @@ def item_counter(item,threshold):
 
     res = cv2.matchTemplate(gray_roi, image, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-    
+
     if max_val > threshold:
+        h, w = image.shape[:2]
+
+        center_y = max_loc[1] + h // 2
         logs.logger.template(f"{item} count found:{max_val}")
-        return True , max_loc
+        return True , center_y 
     logs.logger.template(f"{item} count not found:{max_val} threshold:{threshold}")
-    return False , (0,0)
+    
+    return False , 0
 
 def item_save():
     region = roi_regions["item_locations"]

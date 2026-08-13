@@ -4,3 +4,26 @@
 settings.py
 /source/logs
 /json_files/backup2
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# User data, written at runtime and different on every machine. Both are
+# created from defaults on first launch (settings/store.py and
+# UI/resources/store.py), so a fresh clone is meant to be without them.
+settings/settings.json
+UI/resources/resources.json
+UI/resources/resources_archive.json
+# One log per run: logs.log is the current one, logs_<date>.log the previous
+# few (logger/logger.py) - a diff after every launch if they were tracked.
+logger/logs.log
+logger/logs_*.log
+
+# Savefiles quarantined after failing to load (tools/recovery.py). Kept out
+# of the repo, never deleted off the user's machine.
+CORRUPTED_SAVEFILES/
+logger/archives
+

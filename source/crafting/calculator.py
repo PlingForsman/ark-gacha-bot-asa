@@ -1,23 +1,19 @@
 
+poly_items = ["riot"]
+metal_items = ["fabricated","pump","assault"]
 
-class heavy_turret():
-    def __init__(self,metal,poly,elec,paste):
-        self.metal_cost = 560
-        self.poly_cost = 70
-        self.elec_cost = 270
-        self.paste_cost = 200
-        self.metal = metal
-        self.poly = poly
-        self.elec = elec
-        self.paste = paste
+recipes = {
+    "auto_turret": {"metal": 140, "poly": 20, "elec": 70, "paste": 50},
+    "heavy_turret": {"metal": 400, "poly": 50, "elec": 200, "paste": 150, "auto_turret": 1},
+    "tek_turret": {"metal": 100, "poly": 50 , "elec": 100, "paste": 50},
+}
 
-    def calculate(self):
-        quant_metal = self.metal / self.metal_cost
-        quant_poly = self.poly / self.poly_cost
-        quant_elec = self.elec / self.elec_cost
-        quant_paste = self.paste / self.paste_cost 
-        return min(quant_metal,quant_poly,quant_elec,quant_paste) // 1
+
+def find_low_item():
+    #hover over items and find the one with red text
     
-    def craft(self):
-        amount = self.calculate()
-        
+    ...
+    
+def max_craftable(item:str, recipes=recipes):
+    recipe   = recipes[item]
+    

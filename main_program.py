@@ -5,7 +5,7 @@ import asyncio
 import pyautogui
 import settings
 import os 
-
+'''starts the discord bot without a GUI'''
 intents = discord.Intents.default()
 pyautogui.FAILSAFE = False
 bot = commands.Bot(command_prefix=settings.command_prefix, intents=intents)
