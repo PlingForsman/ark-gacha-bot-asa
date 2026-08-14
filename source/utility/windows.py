@@ -1,6 +1,5 @@
 import ctypes
 from . import local_player , screen
-import time
 from ctypes import wintypes
 import source.utility.w_handle as w_handle
 
