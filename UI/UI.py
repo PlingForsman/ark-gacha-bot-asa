@@ -64,7 +64,7 @@ from UI.theme import (
     COLOR_CARD, COLOR_CARD_HOVER, COLOR_CRYSTAL, COLOR_CYAN,
     COLOR_ELECTRONICS, COLOR_GREEN, COLOR_METAL, COLOR_PASTE, COLOR_PEARL,
     COLOR_RAIL, COLOR_RED, COLOR_RED_HOVER, COLOR_ROW_ALT, COLOR_SIDEBAR,
-    COLOR_SUBTEXT, COLOR_TEXT, FONT_FAMILY,
+    COLOR_SUBTEXT, COLOR_TEXT, COLOR_WARNING, FONT_FAMILY,
 )
 
 # Everything under UI/ (icons, resource art) is addressed relative to this
@@ -124,11 +124,10 @@ CARD_W = (_CONTENT_W - 2 * CARD_GAP) // 3
 EVENT_COLORS = {
     "DEBUG": COLOR_SUBTEXT,
     "INFO": COLOR_BLUE,
-    "WARNING": "#f5a623",
+    "WARNING": COLOR_WARNING,
     "ERROR": COLOR_RED,
     "CRITICAL": COLOR_ACCENT,
 }
-
 EVENT_LABELS = {
     "DEBUG": "Debug",
     "INFO": "Info",
@@ -136,8 +135,6 @@ EVENT_LABELS = {
     "ERROR": "Error",
     "CRITICAL": "Critical",
 }
-
-
 # ----------------------------------------------------------------------------
 # DRAWING HELPER
 # ----------------------------------------------------------------------------
@@ -669,7 +666,7 @@ class DashboardPage(ctk.CTkFrame):
         # Everything written to `logger` (logger/logger.py) from anywhere in
         # the bot - not just this UI - lands here from now on.
         logger.addHandler(DashboardLogHandler(self))
-        logger.info("UI initialized. All log messages from the bot will appear here.")
+        logger.info("UI initialized.")
 
         # --- resources panel --- occupies exactly the dust card's column,
         # one card's width, with the column-1 gap providing the same
@@ -835,7 +832,7 @@ class DashboardPage(ctk.CTkFrame):
         self.running = True
         self.start_time = time.time()
         self.control_card.set_running(True)
-        logger.info("Bot started.")
+        logger.info("Bot has been started..")
 
         threading.Thread(target=self._read_output, daemon=True).start()
 
@@ -844,7 +841,7 @@ class DashboardPage(ctk.CTkFrame):
             self.process.terminate()
             self.running = False
             self.control_card.set_running(False)
-            logger.warning("Bot stopped.")
+            logger.info("Bot has been stopped.")
         else:
             logger.info("No running program.")
 
