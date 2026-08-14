@@ -13,8 +13,7 @@
 
 COLOR_BG = "#0d0d12"          # app background
 COLOR_SIDEBAR = "#131319"     # sidebar background
-COLOR_RAIL = "#0f0f15"        # settings category rail - darker than the
-                                # sidebar so the two navbars read as separate
+COLOR_RAIL = "#0f0f15"        # settings category rail - darker than the sidebar so the two navbars read as separate
 COLOR_CARD = "#1b1b24"        # card / panel background
 COLOR_CARD_HOVER = "#22222d"
 COLOR_ROW_ALT = "#16161f"     # zebra-stripe row background in the event log
@@ -32,8 +31,8 @@ COLOR_CYAN = "#22d3ee"        # dust collected accent
 COLOR_PEARL = "#4B3C58"       # black pearls accent - dark desaturated purple
 COLOR_METAL = "#C7C3C5"       # metal ingots accent - brushed aluminum grey
 COLOR_PASTE = "#444444"       # cementing paste accent - neutral dark grey
-COLOR_ELECTRONICS = "#938F5D" # electronics accent - dull olive gold, off the
-                                # circuit board art
+COLOR_ELECTRONICS = "#938F5D" # electronics accent - dull olive gold, off the circuit board art
 COLOR_CRYSTAL = "#CDD3D3"     # crystal accent - pale ice
+COLOR_WARNING = "#f5a623"     # warning accent - amber
 
 FONT_FAMILY = "Segoe UI"
