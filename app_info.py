@@ -1,7 +1,7 @@
 # App-wide identity, importable from anywhere (UI, bot, logging) without
 # pulling in any UI code.
 
-APP_NAME = "I LIKE TURTLES"
+APP_NAME = "ARK ASA Gacha Bot"
 VERSION = "v1.0.0"
 
 DISCORD_URL = "https://discord.gg/S7tsG4FyMK"
