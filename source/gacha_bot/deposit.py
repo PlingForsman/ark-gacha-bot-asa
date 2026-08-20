@@ -1,13 +1,73 @@
+import os
 import time 
 import settings
 import json
+
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
 from source.logs import gachalogs as logs
 from source.ASA.strucutres import teleporter , inventory
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state
 import source.gacha_bot.config 
-from source.gacha_bot.structures import dedi
+from source.gacha_bot.structures import dedi , vault
+import source.crafting.items as item
+
+temp_items = {
+    #Same as in crafting/items.py used to quickly get the items out of the worker thread
+    "gacha_crystal": {"amount": 0,"temp":0, "active": False},
+    "element_dust": {"amount": 0,"temp":0, "active": False},
+    "org_poly": {"amount": 0,"temp":0, "active": False},
+    "black_pearl": {"amount": 0,"temp":0, "active": False},
+    "metal_ingot": {"amount": 0,"temp":0, "active": False},
+    "flint": {"amount": 0,"temp":0, "active": False},
+    "electronics": {"amount": 0,"temp":0, "active": False},
+    "crystal": {"amount": 0,"temp":0, "active": False}
+}
+
+KEY_MAP = {
+    "gacha_crystal": "crystals_opened",
+    "element_dust": "dust_collected",
+    "black_pearl": "black_pearls",
+    "metal_ingot": "metal_ingots",
+    "flint": "flint",
+    "electronics": "electronics",
+    "crystal": "crystal",
+    # "org_poly" has no matching key in the target json, so it's omitted
+}
+
+def save_items_to_temp_dict(collected: dict):
+    for item, amt in collected.items():
+        if item in temp_items:
+            temp_items[item]["amount"] += amt
+
+def save_temp_items_to_json(file_path: str):
+    # load existing file so we add on top instead of overwriting
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r") as file:
+                current = json.load(file)
+        except (json.JSONDecodeError, OSError) as e:
+            print(f"failed to read {file_path}: {e}")
+            current = {}
+    else:
+        current = {}
+
+    for temp_key, json_key in KEY_MAP.items():
+        gained = temp_items[temp_key]["amount"]
+        if gained:
+            current[json_key] = current.get(json_key, 0) + gained
+
+    try:
+        with open(file_path, "w") as file:
+            json.dump(current, file, indent=4)
+    except OSError as e:
+        print(f"failed to save {file_path}: {e}")
+        return  # don't reset on failure - keep the un-saved amounts for next time
+
+    # reset only the keys that were actually written out
+    logs.logger.info(f"temp items collected {temp_items}")
+    for temp_key in KEY_MAP:
+        temp_items[temp_key]["amount"] = 0
 
 def load_resolution_data(file_path):
     with open(file_path, 'r') as file:
@@ -15,11 +75,16 @@ def load_resolution_data(file_path):
     return data
 
 def open_crystals():
+    counter = item.DepositCounter(save_fn=save_items_to_temp_dict)
+    counter.start()
     count = 0
     while template.check_template("crystal_in_hotbar",0.7) and count < 450: # count is alittle higher incase while pressing the button it doesnt triger
         for x in range(10):
             utils.press_key(f"UseItem{x+1}")
             count += 1
+    counter.stop()
+    save_temp_items_to_json("UI/resources/resources.json")
+
 
 def dedi_deposit(height):
     if height == 3:
@@ -57,7 +122,7 @@ def dedi_deposit(height):
     utils.turn_up(30)
     utils.turn_right(10)
     time.sleep(0.1*settings.lag_offset)
-
+    
 def vault_deposit(items, metadata):
     side = metadata.side
     if side == "right":
@@ -77,7 +142,8 @@ def vault_deposit(items, metadata):
         inventory.open()
     if template.template_await_true(template.check_template,1,"inventory",0.7):
         time.sleep(0.1*settings.lag_offset)
-        if template.check_template_no_bounds("vault_full",0.9):
+        bool , value = vault.see_vault_full()
+        if bool:
             logs.logger.info("your vault is full skipping adding items")
         else:
             for x in range(len(items)):
@@ -125,6 +191,7 @@ def depo_grinder(metadata):
     utils.turn_right(180)
 
 def collect_grindables(metadata):
+    counter = item.DepositCounter(save_fn=save_items_to_temp_dict)
     utils.turn_right(90)
     time.sleep(0.3*settings.lag_offset) # sleep stops the grinder from opening the dedis on accident 
     inventory.open()
@@ -150,8 +217,11 @@ def collect_grindables(metadata):
     time.sleep(0.2*settings.lag_offset)
     utils.turn_left(90)
     time.sleep(0.5*settings.lag_offset) # stopping hitting E on the fabricator and turing it off
+    counter.start()
     dedi.dedi_deposit("grindables",settings.height_grind)
     time.sleep(0.2*settings.lag_offset)
+    counter.stop()
+    save_temp_items_to_json("UI/resources/resources.json")
     if source.gacha_bot.config.linked_poly == True:
         utils.turn_left(90)
         utils.turn_down(40)
@@ -194,3 +264,5 @@ def deposit_all(metadata):
         collect_grindables(grindables_metadata)
     else:
         drop_useless()
+
+    save_temp_items_to_json("UI/resources/resources.json")

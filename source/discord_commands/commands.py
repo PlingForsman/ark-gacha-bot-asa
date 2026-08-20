@@ -10,10 +10,13 @@ import task_manager
 import source.gacha_bot.stations as stations
 import source.ASA.player.player_inventory as inventory
 from source.utility.colour_checks import console_output, output_oranage_tp_pixel
+import io
+from UI.resources.render import render_resources
+
 
 class discord_commands(commands.Cog):
     def __init__(self,bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.running_task = []
         self.start_time = 0
 
@@ -46,14 +49,14 @@ class discord_commands(commands.Cog):
             await asyncio.sleep(30)
     
     @app_commands.command(name="pause", description="sends the bot back to render bed for X amount of seconds")
-    async def reset(interaction: discord.Interaction,time:int):
+    async def pause(self,interaction: discord.Interaction,time:int):
         task = task_manager.scheduler
         pause_task = stations.pause(time)
         task.add_task(pause_task)
         await interaction.response.send_message(f"pause task added will now pause for {time} seconds once the next task finishes")
 
 
-    @app_commands.command()
+    @app_commands.command(name="start", description="Starts the bot")
     async def start(self,interaction: discord.Interaction):
         self.start_time = time.time()
         logchn = self.bot.get_channel(int(settings.log_channel_gacha))
@@ -87,7 +90,7 @@ class discord_commands(commands.Cog):
             return f"{round(hours,2)} hours"
 
     @app_commands.command(name="info",description="sends analytics for the bot")
-    async def info(self,interaction: discord.Integration):
+    async def info(self,interaction: discord.Interaction):
         if self.start_time == 0:
             await interaction.response.send_message("bot hasnt started up yet")
         else:
@@ -97,5 +100,16 @@ class discord_commands(commands.Cog):
     async def colour_checks(self,interaction: discord.Interaction):
         await interaction.response.send_message(f"console mean output { console_output.output_mean_colour()} orange pixel {  output_oranage_tp_pixel.get_orange_pixel()}")
 
-async def setup(bot):
+    @app_commands.command(name="view_resources", description="Sends a rendered image of the resources farmed")
+    async def view_resources(self,interaction: discord.Interaction):
+        await interaction.response.send_message(f"Rendering image...")
+
+        # This renders the session resources from resources.json
+        resource_image = render_resources()
+        buffer = io.BytesIO()
+        resource_image.save(buffer, "PNG")
+        buffer.seek(0)
+        await interaction.channel.send(file=discord.File(buffer, filename="resource_image.png")) 
+
+async def setup(bot: commands.Bot):
     await bot.add_cog(discord_commands(bot))

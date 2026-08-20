@@ -262,3 +262,34 @@ def y_trap_harvest():
     utils.turn_down(80)
     time.sleep(0.2*settings.lag_offset)
 
+def cargo_drop(metadata):
+    direction = metadata.side
+    if direction == "right":
+        turn_constant = 1
+    else:
+        turn_constant = -1
+
+    utils.turn_right(40*turn_constant)
+    time.sleep(0.2*settings.lag_offset)
+    inventory.open()
+
+    attempt = 0
+    while not inventory.is_open():
+        attempt += 1
+        logs.logger.debug(f"the {direction} gacha at {metadata.name} could not be accessed retrying {attempt} / {source.gacha_bot.config.gacha_attempts}")
+        utils.zero()
+        utils.set_yaw(metadata.yaw)
+        utils.turn_right(40*turn_constant)
+        time.sleep(0.2*settings.lag_offset)
+        inventory.open()
+        if attempt >= source.gacha_bot.config.gacha_attempts:
+            logs.logger.error(f"the {direction} gacha at {metadata.name} could not be accesssed after {attempt} attempts")
+            break
+
+    if inventory.is_open():
+        inventory.drop_all_obj() # gacha picks up even while weight capped
+        player_inventory.search_in_inventory("Trap")
+        player_inventory.transfer_all_inventory()
+    inventory.close()
+    time.sleep(0.2*settings.lag_offset)
+    utils.turn_left(40*turn_constant)
