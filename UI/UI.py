@@ -46,6 +46,7 @@ import time
 import tkinter as tk
 import webbrowser
 from datetime import datetime
+import discord
 
 import customtkinter as ctk
 import PIL
@@ -1423,6 +1424,7 @@ class SupportPage(FormPage):
                 ("CustomTkinter", ctk.__version__),
                 ("Pillow", PIL.__version__),
                 ("Tk", tk_version),
+                ("Discord.py", discord.__version__),
                 ("OS", platform.platform()),
                 ("Display", f"{screen} @ {scaling} scaling"),
             ]),
@@ -1470,7 +1472,7 @@ class UI(ctk.CTk):
 
     def __init__(self):
         super().__init__()
-        self.title(APP_NAME)
+        self.title(f"{APP_NAME} - {VERSION}")
         self.wm_iconbitmap(asset("images", "element_dust.ico"))
         self.geometry(f"{WINDOW_W}x{WINDOW_H}")
         self.minsize(WINDOW_W, WINDOW_H)
