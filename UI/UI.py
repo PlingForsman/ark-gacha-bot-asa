@@ -1066,6 +1066,7 @@ class SettingsPage(FormPage):
         self._entry_row(lhalf, "Render Pushout", "render_pushout")
         self._entry_row(lhalf, "Berry Type", "berry_type")
         self._entry_row(lhalf, "Cargo Pickup","cargo_pickup")
+        self._entry_row(lhalf, "Replenish interval", "replenish_interval")
         self._entry_row(rhalf, "Iguanadon", "iguanadon")
         self._entry_row(rhalf, "Drop Off", "drop_off")
         self._entry_row(rhalf, "Bed Spawn", "bed_spawn")

@@ -31,6 +31,8 @@ y_trap_bot: bool = data["y_trap_bot"]
 use_discord: bool = data["use_discord"]
 cargo_ledger: bool = data["cargo_ledger"]
 ocr_path: str = data["ocr_path"]
+replenish_interval: float = data["replenish_interval"]
+
 
 log_channel_gacha = data["log_channel_gacha"]
 log_active_queue = data["log_active_queue"]

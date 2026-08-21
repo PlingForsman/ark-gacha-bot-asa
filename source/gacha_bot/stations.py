@@ -64,7 +64,7 @@ class gacha_station(base_task):
             #we just improve every time ie start 100m then 120m 125m until you find the best time -> 
             ...
             #for timebeing
-            if (berry_station or time_between > source.gacha_bot.config.time_to_reberry*60*60):
+            if (berry_station or time_between > settings.replenish_interval*60*60):
                 teleporter.teleport_not_default(cargo_metadata)
                 #cargo pickup
                 cargo_ledger.get_y_from_cargo()
@@ -87,7 +87,7 @@ class gacha_station(base_task):
 
 
         else:
-            if (berry_station or time_between > source.gacha_bot.config.time_to_reberry*60*60): # if time is greater than 4 hours since the last time you went to berry station 
+            if (berry_station or time_between > settings.replenish_interval*60*60): # if time is greater than 4 hours since the last time you went to berry station 
                 teleporter.teleport_not_default(berry_metadata)                    # or if berry station is true( when you go to tekpod and drop all ) and the time between has been longer than 30 mins since youve last been 
                 if settings.external_berry: 
                     logs.logger.debug("sleeping for 20 seconds as external")

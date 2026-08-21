@@ -30,6 +30,7 @@ DEFAULTS = {
     "berry_type": "mejoberry",
     "station_yaw": 0.0,
     "render_pushout": 0.0,
+    "replenish_interval": 0.01,
     "height_ele": 3,
     "height_grind": 3,
     "command_prefix": "%",
@@ -69,6 +70,9 @@ FIELD_TYPES = {
     "y_trap_bot": bool,
     "use_discord": bool,
     "cargo_ledger": bool,
+    "replenish_interval":float, 
+    "ocr_path":str,
+    "cargo_pickup":str
 }
 
 
