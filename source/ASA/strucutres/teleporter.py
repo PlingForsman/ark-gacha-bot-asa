@@ -68,11 +68,6 @@ def teleport_not_default(arg):
 
     if current_teleport == teleporter_name:
         logs.logger.debug("skipping teleport we are teleporting to the same location we are currently on reseting yaw and pitch just incase")
-        utils.turn_down(80)
-        time.sleep(0.2)
-        utils.turn_up(80)
-        time.sleep(0.2)
-        utils.set_yaw(stationdata.yaw)
         return 
 
     if player_state.human.on_tp == False:
