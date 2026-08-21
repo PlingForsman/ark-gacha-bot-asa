@@ -54,7 +54,7 @@ class gacha_station(base_task):
 
         berry_metadata = custom_stations.get_station_metadata(settings.berry_station)
         iguanadon_metadata = custom_stations.get_station_metadata(settings.iguanadon)
-        cargo_metadata = custom_stations.get_station_metadata(settings.cargo_ledger)
+        cargo_metadata = custom_stations.get_station_metadata(settings.cargo_pickup)
         
         if settings.cargo_ledger:
             #check weight could use ocr

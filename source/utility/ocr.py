@@ -1,6 +1,9 @@
 import cv2
 import pytesseract
 import source.utility.screen as screen
+import settings
+
+pytesseract.pytesseract.tesseract_cmd = settings.ocr_path
 
 def int_only(x, y, w, h):
     config = '--psm 6 -c tessedit_char_whitelist=0123456789'

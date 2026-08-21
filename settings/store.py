@@ -26,6 +26,7 @@ DEFAULTS = {
     "bed_spawn": "GACHARENDER",
     "berry_station": "GACHABERRYSTATION",
     "grindables": "GACHAGRINDABLES",
+    "cargo_pickup":"GACHACARGOLEDGER",
     "berry_type": "mejoberry",
     "station_yaw": 0.0,
     "render_pushout": 0.0,
@@ -45,6 +46,7 @@ DEFAULTS = {
     "log_active_queue": "1111111111",
     "log_wait_queue": "1111111111",
     "discord_api_key": "",
+    "ocr_path": r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 }
 
 # Non-string fields need to be cast back to their real type when they come

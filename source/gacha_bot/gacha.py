@@ -287,7 +287,8 @@ def cargo_drop(metadata):
             break
 
     if inventory.is_open():
-        inventory.drop_all_obj() # gacha picks up even while weight capped
+        inventory.search_in_object("pellet")
+        inventory.drop_all_obj()# gacha picks up even while weight capped
         player_inventory.search_in_inventory("Trap")
         player_inventory.transfer_all_inventory()
     inventory.close()

@@ -7,6 +7,7 @@ import settings
 import source.ASA.config 
 import source.ASA.stations.custom_stations
 
+current_teleport = ""
 
 def is_open():
     return template.check_template("teleporter_title",0.7)
@@ -57,6 +58,23 @@ def close():
             break
     
 def teleport_not_default(arg):
+    global current_teleport
+    if isinstance(arg, source.ASA.stations.custom_stations.station_metadata):
+        stationdata = arg
+    else:
+        stationdata = source.ASA.stations.custom_stations.get_station_metadata(arg)
+
+    teleporter_name = stationdata.name
+
+    if current_teleport == teleporter_name:
+        logs.logger.debug("skipping teleport we are teleporting to the same location we are currently on reseting yaw and pitch just incase")
+        utils.turn_down(80)
+        time.sleep(0.2)
+        utils.turn_up(80)
+        time.sleep(0.2)
+        utils.set_yaw(stationdata.yaw)
+        return 
+
     if player_state.human.on_tp == False:
         time.sleep(0.2*settings.lag_offset)
         utils.turn_down(80)
@@ -64,18 +82,14 @@ def teleport_not_default(arg):
         bed.fast_travel(settings.bed_spawn) # spawns on render bed which is on the tp
         time.sleep(0.2*settings.lag_offset)
         
-    if isinstance(arg, source.ASA.stations.custom_stations.station_metadata):
-        stationdata = arg
-    else:
-        stationdata = source.ASA.stations.custom_stations.get_station_metadata(arg)
-    
-    teleporter_name = stationdata.name
     time.sleep(0.3*settings.lag_offset)
     utils.turn_down(80)
     time.sleep(0.3*settings.lag_offset)
     open() 
     time.sleep(0.2*settings.lag_offset) #waiting for teleport_icon to populate on the screen before we check
     if is_open():
+        #assuming that when we open up the teleporter we either teleport or stay in the same position 
+        current_teleport = teleporter_name
         player_state.human.is_on_tp()
         if template.teleport_icon(0.55):
             start = time.time()
