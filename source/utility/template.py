@@ -1,7 +1,7 @@
 from source.utility import screen
 import numpy as np
 import cv2
-from source.logs import gachalogs as logs
+from logger.logger import logger
 import settings
 import time
 from source.ASA.player import console
@@ -87,9 +87,9 @@ def check_template(item:str, threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        logs.logger.template(f"{item} found:{max_val}")
+        logger.debug(f"{item} found:{max_val}")
         return True
-    logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 def check_template_no_bounds(item:str, threshold:float) -> bool:
@@ -117,9 +117,9 @@ def check_template_no_bounds(item:str, threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        logs.logger.template(f"{item} found:{max_val}")
+        logger.debug(f"{item} found:{max_val}")
         return True
-    logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 def return_location(item:str,threshold:float): #assumes that the check for the item on the screen has already been done
@@ -147,9 +147,9 @@ def return_location(item:str,threshold:float): #assumes that the check for the i
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        logs.logger.template(f"{item} found:{max_val} at:{max_loc}")
+        logger.debug(f"{item} found:{max_val} at:{max_loc}")
         return max_loc 
-    logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{item} not found:{max_val} threshold:{threshold}")
     return 0
 
 def teleport_icon(threshold:float) -> bool:
@@ -177,9 +177,9 @@ def teleport_icon(threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        logs.logger.template(f"teleporter_icon found:{max_val}")
+        logger.debug(f"teleporter_icon found:{max_val}")
         return True
-    logs.logger.template(f"teleporter_icon not found:{max_val} threshold:{threshold}")
+    logger.debug(f"teleporter_icon not found:{max_val} threshold:{threshold}")
     return False
 
 def inventory_first_slot(item:str,threshold:float) -> bool:
@@ -208,9 +208,9 @@ def inventory_first_slot(item:str,threshold:float) -> bool:
 
 
     if max_val > threshold:
-        logs.logger.template(f"{item} found:{max_val}")
+        logger.debug(f"{item} found:{max_val}")
         return True
-    logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 def check_buffs(buff,threshold):
@@ -238,9 +238,9 @@ def check_buffs(buff,threshold):
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        logs.logger.template(f"{buff} found:{max_val}")
+        logger.debug(f"{buff} found:{max_val}")
         return True
-    logs.logger.template(f"{buff} not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{buff} not found:{max_val} threshold:{threshold}")
     return False
 
 def check_teleporter_orange():
@@ -255,7 +255,7 @@ def check_teleporter_orange():
 
     hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
     pixel_hsv = hsv[0, 0]
-    logs.logger.template(f"check orange {np.all(pixel_hsv >= lower_boundary) and np.all(pixel_hsv <= upper_boundary)}")
+    logger.debug(f"check orange {np.all(pixel_hsv >= lower_boundary) and np.all(pixel_hsv <= upper_boundary)}")
     return np.all(pixel_hsv >= lower_boundary) and np.all(pixel_hsv <= upper_boundary)
 
 def white_flash():
@@ -263,7 +263,7 @@ def white_flash():
     total_pixels = roi.size
     num_255_pixels = np.count_nonzero(roi == 255)
     percentage_255 = (num_255_pixels / total_pixels) * 100
-    logs.logger.template(f"white flash {percentage_255 >= 80}")
+    logger.debug(f"white flash {percentage_255 >= 80}")
     return percentage_255 >= 80
 
 def get_file():
@@ -297,16 +297,16 @@ lower_console_bound = bounds[0]["lower_bound"]
 
 def console_strip_bottom():
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1419,2560,2)
+        roi = screen.get_screen_roi(0,1412,2560,2)
     else:
-        roi = screen.get_screen_roi(0,1059,1920,2)
+        roi = screen.get_screen_roi(0,1052,1920,2)
     return roi
 
 def console_strip_middle():
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1065,2560,2)
+        roi = screen.get_screen_roi(0,1060,2560,2)
     else:
-        roi = screen.get_screen_roi(0,795,1920,2)
+        roi = screen.get_screen_roi(0,790,1920,1)
     return roi 
 
 def console_strip_check(roi):
@@ -316,7 +316,7 @@ def console_strip_check(roi):
 
     total_pixels = gray_roi.size
     percentage_gray = (num_gray_pixels / total_pixels) * 100
-    logs.logger.template(f"percentage gray {percentage_gray}")
+    logger.debug(f"percentage gray {percentage_gray}")
     return percentage_gray >= 80
 
 def check_both_strips():
@@ -335,7 +335,7 @@ def check_if_same_colour(roi):
         y = random.randint(0, height - 1)
         pixels.append(gray_roi[y, x])
     if all(pixel == pixels[0] for pixel in pixels):
-        logs.logger.error(f"console strip is likley -> {pixels[0]} please change the console bounds +-5 ")
+        logger.error(f"console strip is likley -> {pixels[0]} please change the console bounds +-5 ")
 
     return all(pixel == pixels[0] for pixel in pixels)
 
@@ -373,9 +373,9 @@ def item_counter(roi,item,threshold):
         h, w = image.shape[:2]
 
         center_y = max_loc[1] + h // 2
-        logs.logger.template(f"{item} count found:{max_val}")
+        logger.debug(f"{item} count found:{max_val}")
         return True , center_y 
-    logs.logger.template(f"{item} count not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{item} count not found:{max_val} threshold:{threshold}")
     
     return False , 0
 
@@ -411,19 +411,11 @@ def item_load(gray_roi, item, threshold):
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        logs.logger.template(f"{item} count found:{max_val}")
+        logger.debug(f"{item} count found:{max_val}")
         return True , max_loc
-    logs.logger.template(f"{item} count not found:{max_val} threshold:{threshold}")
+    logger.debug(f"{item} count not found:{max_val} threshold:{threshold}")
     return False , (0,0)
 
 
-
-
-
-
 if __name__ == "__main__":
-    time.sleep(2)
-    #change_console_mask()
-    time.sleep(0.5)
-    pass
-    
+    ...
