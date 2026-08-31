@@ -297,16 +297,16 @@ lower_console_bound = bounds[0]["lower_bound"]
 
 def console_strip_bottom():
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1412,2560,2)
+        roi = screen.get_screen_roi(0,1404,2560,1)
     else:
-        roi = screen.get_screen_roi(0,1052,1920,2)
+        roi = screen.get_screen_roi(0,1059,1920,1)
     return roi
 
 def console_strip_middle():
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1060,2560,2)
+        roi = screen.get_screen_roi(0,1055,2560,1)
     else:
-        roi = screen.get_screen_roi(0,790,1920,1)
+        roi = screen.get_screen_roi(0,795,1920,1)
     return roi 
 
 def console_strip_check(roi):
